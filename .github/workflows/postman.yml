@@ -2,13 +2,8 @@ name: Automated API tests using Postman CLI
 
 on:
   push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
   schedule:
-    - cron: "*/5 * * * *"  # Runs every 5 mins
-  workflow_dispatch:
-
+    - cron: '*/5 * * * *' # This schedules the job to run every 5 minutes
 
 jobs:
   automated-api-tests:
@@ -31,9 +26,8 @@ jobs:
           server_port: 587
           username: ${{ secrets.EMAIL }}
           password: ${{ secrets.PASSWORD }}
-          subject: Shop APi Test Report
+          subject: Postman API Test Report
           to: orji.motopayng@gmail.com
           from: ndubuisiaso@gmail.com
-          body: "Please find attached API scheduled test report."
-          content_type: text/html
-          attachments: postman-report/index.html
+          body: Attached is the Postman API test report."
+          attachments: report.jsons
