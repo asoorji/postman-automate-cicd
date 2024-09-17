@@ -1,38 +1,51 @@
-name: Automated API tests using Postman CLI
+
+name: Automated API tests using Newman CLI
 
 on:
   push:
   schedule:
-    - cron: '*/5 * * * *' # This schedules the job to run every 5 minutes
+    - cron: '*/5 * * * *'  # Run every 5 minutes
 
 jobs:
   automated-api-tests:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
+      # Install Newman CLI
       - name: Install Newman CLI
         run: npm install -g newman
-      - name: Install Postman CLI
-        run: |
-          curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
-      - name: Login to Postman CLI
-        run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
-      - name: Run API tests
-        run: |
-          postman collection run "30277426-7d4ff7fe-683e-4632-a94f-d6de5f0fffb9" --reporters cli,json --reporter-json-export report.json
 
+      # Run the Postman collection with Newman and generate a JSON report
+      - name: Run API tests
+        id: run_tests
+        run: |
+          newman run "30277426-7d4ff7fe-683e-4632-a94f-d6de5f0fffb9" --reporters cli,json --reporter-json-export report.json || exit 1
+
+      # Debugging step to list files in the directory
       - name: List files for debugging
         run: ls -la
 
-      - name: Send Email with POSTMAN Report
+      # Optional: Process the report.json file to check for errors or issues
+      - name: Process report
+        run: |
+          # Example of processing the report.json
+          cat report.json | grep -E "failed" > errors.log || true
+          # Check if errors.log is created
+          cat errors.log
+
+      # Send email with the test report
+      - name: Send email
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
-          server_port: 587
-          username: ${{ secrets.EMAIL }}
-          password: ${{ secrets.PASSWORD }}
-          subject: Postman API Test Report
-          to: orji.motopayng@gmail.com
-          from: ndubuisiaso@gmail.com
-          body: Attached is the Postman API test report."
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "Postman API Test Report"
+          to: recipient@example.com
+          from: ${{ secrets.EMAIL_USERNAME }}
+          body: |
+            The Postman API tests have been executed. Please find the test report attached.
           attachments: report.json
