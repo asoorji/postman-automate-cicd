@@ -23,3 +23,17 @@ jobs:
       - name: Run API tests
         run: |
           postman collection run "30277426-7d4ff7fe-683e-4632-a94f-d6de5f0fffb9"
+
+      - name: Send Email with POSTMAN Report
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL }}
+          password: ${{ secrets.PASSWORD }}
+          subject: Shop APi Test Report
+          to: orji.motopayng@gmail.com
+          from: ndubuisiaso@gmail.com
+          body: "Please find attached API scheduled test report."
+          content_type: text/html
+          attachments: postman-report/index.html
