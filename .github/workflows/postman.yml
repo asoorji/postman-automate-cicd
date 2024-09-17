@@ -21,7 +21,7 @@ jobs:
       - name: Run API tests
         id: run_tests
         run: |
-          newman run "30277426-7d4ff7fe-683e-4632-a94f-d6de5f0fffb9" --reporters cli,json --reporter-json-export report.json || exit 1
+          newman run "Platzi Fake Store API.postman_collection.json" --reporters cli,json --reporter-json-export report.json || exit 1
 
       # Debugging step to list files in the directory
       - name: List files for debugging
@@ -35,17 +35,15 @@ jobs:
           # Check if errors.log is created
           cat errors.log
 
-      # Send email with the test report
-      - name: Send email
+      - name: Send Email with POSTMAN Report
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
-          server_port: 465
-          username: ${{ secrets.EMAIL_USERNAME }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "Postman API Test Report"
-          to: recipient@example.com
-          from: ${{ secrets.EMAIL_USERNAME }}
-          body: |
-            The Postman API tests have been executed. Please find the test report attached.
+          server_port: 587
+          username: ${{ secrets.EMAIL }}
+          password: ${{ secrets.PASSWORD }}
+          subject: Postman API Test Report
+          to: orji.motopayng@gmail.com
+          from: ndubuisiaso@gmail.com
+          body: Attached is the Postman API test report."
           attachments: report.json
