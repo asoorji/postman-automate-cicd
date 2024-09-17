@@ -1,4 +1,3 @@
-
 name: Automated API tests using Newman CLI
 
 on:
@@ -13,28 +12,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Install Newman CLI
-      - name: Install Newman CLI
-        run: npm install -g newman
+      # Install Newman CLI and the HTML reporter
+      - name: Install Newman CLI and HTML reporter
+        run: |
+          npm install -g newman newman-reporter-html
 
-      # Run the Postman collection with Newman and generate a JSON report
+      # Run the Postman collection with Newman and generate an HTML report
       - name: Run API tests
         id: run_tests
         run: |
-          newman run "Platzi Fake Store API.postman_collection.json" --reporters cli,json --reporter-json-export report.json || exit 1
+          newman run "Platzi Fake Store API.postman_collection.json" --reporters cli,html --reporter-html-export report.html || exit 1
 
       # Debugging step to list files in the directory
       - name: List files for debugging
         run: ls -la
 
-      # Optional: Process the report.json file to check for errors or issues
-      - name: Process report
-        run: |
-          # Example of processing the report.json
-          cat report.json | grep -E "failed" > errors.log || true
-          # Check if errors.log is created
-          cat errors.log
-
+      # Send the HTML report via email
       - name: Send Email with POSTMAN Report
         uses: dawidd6/action-send-mail@v3
         with:
@@ -42,8 +35,8 @@ jobs:
           server_port: 587
           username: ${{ secrets.EMAIL }}
           password: ${{ secrets.PASSWORD }}
-          subject: Postman API Test Report
+          subject: "Postman API Test Report"
           to: orji.motopayng@gmail.com
           from: ndubuisiaso@gmail.com
-          body: Attached is the Postman API test report."
-          attachments: report.json
+          body: "Attached is the Postman API test report."
+          attachments: report.html
