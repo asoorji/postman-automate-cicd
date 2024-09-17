@@ -19,6 +19,9 @@ jobs:
         run: |
           postman collection run "30277426-7d4ff7fe-683e-4632-a94f-d6de5f0fffb9"
 
+      - name: List files for debugging
+        run: ls -la
+
       - name: Send Email with POSTMAN Report
         uses: dawidd6/action-send-mail@v3
         with:
