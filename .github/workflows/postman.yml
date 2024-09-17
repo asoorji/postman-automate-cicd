@@ -30,4 +30,4 @@ jobs:
           to: orji.motopayng@gmail.com
           from: ndubuisiaso@gmail.com
           body: Attached is the Postman API test report."
-          attachments: report.jsons
+          attachments: report.json
