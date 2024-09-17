@@ -12,38 +12,32 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Install Newman CLI and the enhanced HTML reporter
-      - name: Install Newman CLI and Enhanced HTML Reporter
+      # Install Newman CLI and the HTML reporter
+      - name: Install Newman CLI and HTML reporter
         run: |
-          npm install -g newman newman-reporter-html-reporter
+          npm install -g newman newman-reporter-html
 
-      # Run the Postman collection with Newman and generate an enhanced HTML report
+      # Run the Postman collection with Newman and generate an HTML report
       - name: Run API tests
         id: run_tests
         run: |
-          newman run "Platzi Fake Store API.postman_collection.json" --reporters cli,html-reporter --reporter-html-reporter-export report.html || exit 1
+          newman run "Platzi Fake Store API.postman_collection.json" --reporters cli,html --reporter-html-export report.html || exit 1
 
-      # List files for debugging
+      # Debugging step to list files in the directory
       - name: List files for debugging
         run: ls -la
 
-      # Optional: Process the report.html file to check for errors or issues
-      - name: Process HTML Report
-        run: |
-          # Example of processing the report.html
-          echo "Enhanced HTML report generated successfully."
-
-      # Send email with enhanced HTML report
-      - name: Send Email with Postman Report
+      # Send the HTML report via email
+      - name: Send Email with POSTMAN Report
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
           server_port: 587
           username: ${{ secrets.EMAIL }}
           password: ${{ secrets.PASSWORD }}
-          subject: Postman API Test Report
+          subject: "Postman API Test Report"
           to: orji.motopayng@gmail.com
           from: ndubuisiaso@gmail.com
-          body: |
-            Attached is the enhanced Postman API test report in HTML format.
+          body: "Attached is the Postman API test report."
           attachments: report.html
+s
