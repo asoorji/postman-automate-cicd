@@ -2,8 +2,8 @@ name: Automated API tests using Newman CLI
 
 on:
   push:
-  schedule:
-    - cron: '*/5 * * * *'  # Run every 5 minutes
+  # schedule:
+   #  - cron: '*/5 * * * *'  # Run every 5 minutes
 
 jobs:
   automated-api-tests:
